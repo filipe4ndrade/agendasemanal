@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Agenda Semanal</title>
+    <style>
+        /* Previous styles remain the same until .tag */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a237e;
+            margin-bottom: 30px;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 100px repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .header-cell {
+            background-color: #1a237e;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .time-cell {
+            background-color: #3949ab;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .schedule-cell {
+            background-color: white;
+            min-height: 100px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .activity {
+            background-color: #e3f2fd;
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .activity.completed {
+            opacity: 0.7;
+        }
+
+        .activity.completed .activity-text {
+            text-decoration: line-through;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 4px;
+            margin-bottom: 4px;
+            color: white;
+        }
+
+        .custom-tags-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .custom-tag-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .custom-tag-input input[type="color"] {
+            padding: 0;
+            width: 50px;
+        }
+
+        .tags-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        /* Rest of the previous styles remain the same */
+        .add-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #1a237e;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3949ab;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Agenda Semanal</h1>
+
+        <!-- Custom Tags Section -->
+        <div class="custom-tags-section">
+            <h3>Gerenciar Tags</h3>
+            <div class="custom-tag-input">
+                <input type="text" id="newTagName" placeholder="Nome da tag">
+                <input type="color" id="newTagColor" value="#1a237e">
+                <button onclick="addCustomTag()">Adicionar Tag</button>
+            </div>
+            <div id="customTagsList" class="tags-container">
+                <!-- Custom tags will be displayed here -->
+            </div>
+        </div>
+        
+        <!-- Previous form structure with modifications -->
+        <div class="add-form">
+            <div class="form-group">
+                <label>Dia da Semana:</label>
+                <select id="daySelect">
+                    <option value="segunda">Segunda</option>
+                    <option value="terca">Terça</option>
+                    <option value="quarta">Quarta</option>
+                    <option value="quinta">Quinta</option>
+                    <option value="sexta">Sexta</option>
+                    <option value="sabado">Sábado</option>
+                    <option value="domingo">Domingo</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Período:</label>
+                <select id="timeSelect">
+                    <option value="manha">Manhã</option>
+                    <option value="tarde">Tarde</option>
+                    <option value="noite">Noite</option>
+                    <option value="madrugada">Madrugada</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Atividade:</label>
+                <input type="text" id="activityInput" placeholder="Digite a atividade">
+            </div>
+            <div class="form-group">
+                <label>Tags (máximo 2):</label>
+                <div id="tagsContainer" class="tags-container">
+                    <!-- Tags will be dynamically loaded here -->
+                </div>
+            </div>
+            <button onclick="addActivity()">Adicionar Atividade</button>
+        </div>
+
+        <!-- Schedule grid remains the same -->
+        <div class="schedule-grid">
+            <!-- Previous grid structure remains the same -->
+            <div class="header-cell">Horário</div>
+            <div class="header-cell">Segunda</div>
+            <div class="header-cell">Terça</div>
+            <div class="header-cell">Quarta</div>
+            <div class="header-cell">Quinta</div>
+            <div class="header-cell">Sexta</div>
+            <div class="header-cell">Sábado</div>
+            <div class="header-cell">Domingo</div>
+
+            <div class="time-cell">Manhã</div>
+            <div class="schedule-cell" id="segunda-manha"></div>
+            <div class="schedule-cell" id="terca-manha"></div>
+            <div class="schedule-cell" id="quarta-manha"></div>
+            <div class="schedule-cell" id="quinta-manha"></div>
+            <div class="schedule-cell" id="sexta-manha"></div>
+            <div class="schedule-cell" id="sabado-manha"></div>
+            <div class="schedule-cell" id="domingo-manha"></div>
+
+            <div class="time-cell">Tarde</div>
+            <div class="schedule-cell" id="segunda-tarde"></div>
+            <div class="schedule-cell" id="terca-tarde"></div>
+            <div class="schedule-cell" id="quarta-tarde"></div>
+            <div class="schedule-cell" id="quinta-tarde"></div>
+            <div class="schedule-cell" id="sexta-tarde"></div>
+            <div class="schedule-cell" id="sabado-tarde"></div>
+            <div class="schedule-cell" id="domingo-tarde"></div>
+
+            <div class="time-cell">Noite</div>
+            <div class="schedule-cell" id="segunda-noite"></div>
+            <div class="schedule-cell" id="terca-noite"></div>
+            <div class="schedule-cell" id="quarta-noite"></div>
+            <div class="schedule-cell" id="quinta-noite"></div>
+            <div class="schedule-cell" id="sexta-noite"></div>
+            <div class="schedule-cell" id="sabado-noite"></div>
+            <div class="schedule-cell" id="domingo-noite"></div>
+
+            <div class="time-cell">Madrugada</div>
+            <div class="schedule-cell" id="segunda-madrugada"></div>
+            <div class="schedule-cell" id="terca-madrugada"></div>
+            <div class="schedule-cell" id="quarta-madrugada"></div>
+            <div class="schedule-cell" id="quinta-madrugada"></div>
+            <div class="schedule-cell" id="sexta-madrugada"></div>
+            <div class="schedule-cell" id="sabado-madrugada"></div>
+            <div class="schedule-cell" id="domingo-madrugada"></div>
+        </div>
+    </div>
+
+    <script>
+        // Load custom tags and activities when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCustomTags();
+            loadActivities();
+        });
+
+        // Custom tags management
+        function loadCustomTags() {
+            const tags = getCustomTags();
+            updateTagsContainer(tags);
+            updateCustomTagsList(tags);
+        }
+
+        function getCustomTags() {
+            return JSON.parse(localStorage.getItem('customTags') || '[]');
+        }
+
+        function saveCustomTags(tags) {
+            localStorage.setItem('customTags', JSON.stringify(tags));
+        }
+
+        function addCustomTag() {
+            const name = document.getElementById('newTagName').value.trim();
+            const color = document.getElementById('newTagColor').value;
+
+            if (!name) {
+                alert('Por favor, digite um nome para a tag!');
+                return;
+            }
+
+            const tags = getCustomTags();
+            if (tags.some(tag => tag.name.toLowerCase() === name.toLowerCase())) {
+                alert('Esta tag já existe!');
+                return;
+            }
+
+            tags.push({ name, color });
+            saveCustomTags(tags);
+            loadCustomTags();
+
+            // Clear inputs
+            document.getElementById('newTagName').value = '';
+        }
+
+        function removeCustomTag(tagName) {
+            const tags = getCustomTags().filter(tag => tag.name !== tagName);
+            saveCustomTags(tags);
+            loadCustomTags();
+        }
+
+        function updateTagsContainer(tags) {
+            const container = document.getElementById('tagsContainer');
+            container.innerHTML = '';
+
+            tags.forEach(tag => {
+                const tagDiv = document.createElement('div');
+                tagDiv.innerHTML = `
+                    <input type="checkbox" id="tag${tag.name}" class="tag-checkbox" value="${tag.name}">
+                    <label for="tag${tag.name}" class="tag-label" style="background-color: ${tag.color}">
+                        ${tag.name}
+                    </label>
+                `;
+                container.appendChild(tagDiv);
+            });
+        }
+
+        function updateCustomTagsList(tags) {
+            const container = document.getElementById('customTagsList');
+            container.innerHTML = '';
+
+            tags.forEach(tag => {
+                const tagSpan = document.createElement('span');
+                tagSpan.className = 'tag';
+                tagSpan.style.backgroundColor = tag.color;
+                tagSpan.innerHTML = `
+                    ${tag.name}
+                    <span onclick="removeCustomTag('${tag.name}')" style="cursor: pointer; margin-left: 5px;">❌</span>
+                `;
+                container.appendChild(tagSpan);
+            });
+        }
+
+        // Activity management
+        function addActivity() {
+            const day = document.getElementById('daySelect').value;
+            const time = document.getElementById('timeSelect').value;
+            const activity = document.getElementById('activityInput').value.trim();
+            const tags = getSelectedTags();
+
+            if (!activity) {
+                alert('Por favor, digite uma atividade!');
+                return;
+            }
+
+            if (tags.length > 2) {
+                alert('Selecione no máximo 2 tags!');
+                return;
+            }
+
+            const cellId = `${day}-${time}`;
+            const activities = getActivities(cellId);
+            activities.push({ 
+                text: activity, 
+                tags: tags.map(tag => {
+                    const customTag = getCustomTags().find(t => t.name === tag);
+                    return {
+                        name: tag,
+                        color: customTag ? customTag.color : '#1a237e'
+                    };
+                }),
+                completed: false 
+            });
+            saveActivities(cellId, activities);
+            updateCell(cellId, activities);
+
+            // Clear form
+            document.getElementById('activityInput').value = '';
+            document.querySelectorAll('.tag-checkbox').forEach(cb => cb.checked = false);
+        }
+
+        function getSelectedTags() {
+            const checkboxes = document.querySelectorAll('.tag-checkbox:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        function toggleActivity(cellId, index) {
+            const activities = getActivities(cellId);
+            activities[index].completed = !activities[index].completed;
+            saveActivities(cellId, activities);
+            updateCell(cellId, activities);
+        }
+
+        function getActivities(cellId) {
+            const stored = localStorage.getItem(cellId);
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function saveActivities(cellId, activities) {
+            localStorage.setItem(cellId, JSON.stringify(activities));
+        }
+
+        function updateCell(cellId, activities) {
+            const cell = document.getElementById(cellId);
+            cell.innerHTML = '';
+
+            activities.forEach((activity, index) => {
+                const activityDiv = document.createElement('div');
+                activityDiv.className = `activity ${activity.completed ? 'completed' : ''}`;
+                
+                // Checkbox
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = activity.completed;
+                checkbox.style.marginRight = '8px';
+                checkbox.onclick = () => toggleActivity(cellId, index);
+                
+                // Remove button
+                const removeBtn = document.createElement('span');
+                removeBtn.innerHTML = '❌';
+                removeBtn.style.float = 'right';
+                removeBtn.style.cursor = 'pointer';
+                removeBtn.onclick = () => removeActivity(cellId, index);
+                
+                // Activity text
+                const activityText = document.createElement('span');
+                activityText.className = 'activity-text';
+                activityText.textContent = activity.text;
+                
+                // Tags
+                const tagsContainer = document.createElement('div');
+                activity.tags.forEach(tag => {
+                    const tagSpan = document.createElement('span');
+                    tagSpan.className = 'tag';
+                    tagSpan.style.backgroundColor = tag.color;
+                    tagSpan.textContent = tag.name;
+                    tagsContainer.appendChild(tagSpan);
+                });
+
+                activityDiv.appendChild(checkbox);
+                activityDiv.appendChild(activityText);
+                activityDiv.appendChild(removeBtn);
+                activityDiv.appendChild(document.createElement('br'));
+                activityDiv.appendChild(tagsContainer);
+                
+                cell.appendChild(activityDiv);
+            });
+        }
+
+        function removeActivity(cellId, index) {
+            const activities = getActivities(cellId);
+            activities.splice(index, 1);
+            saveActivities(cellId, activities);
+            updateCell(cellId, activities);
+        }
+
+        function loadActivities() {
+            const days = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo'];
+            const times = ['manha', 'tarde', 'noite', 'madrugada'];
+
+            days.forEach(day => {
+                times.forEach(time => {
+                    const cellId = `${day}-${time}`;
+                    const activities = getActivities(cellId);
+                    updateCell(cellId, activities);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

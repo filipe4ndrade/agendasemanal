@@ -2,212 +2,345 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda Semanal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Previous styles remain the same until .tag */
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --background-color: #f1f5f9;
+            --card-background: #ffffff;
+            --text-color: #1e293b;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background-color: #f0f2f5;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
             padding: 20px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
-        h1 {
-            text-align: center;
-            color: #1a237e;
-            margin-bottom: 30px;
+        /* Header Styles */
+        .header {
+            background-color: var(--card-background);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .schedule-grid {
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        /* Controls Section */
+        .controls {
             display: grid;
-            grid-template-columns: 100px repeat(7, 1fr);
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .header-cell {
-            background-color: #1a237e;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-
-        .time-cell {
-            background-color: #3949ab;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            border-radius: 5px;
-        }
-
-        .schedule-cell {
-            background-color: white;
-            min-height: 100px;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .activity {
-            background-color: #e3f2fd;
-            padding: 8px;
-            margin-bottom: 8px;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .activity.completed {
-            opacity: 0.7;
-        }
-
-        .activity.completed .activity-text {
-            text-decoration: line-through;
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            margin-right: 4px;
-            margin-bottom: 4px;
-            color: white;
-        }
-
-        .custom-tags-section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
             margin-bottom: 20px;
         }
 
-        .custom-tag-input {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .custom-tag-input input[type="color"] {
-            padding: 0;
-            width: 50px;
-        }
-
-        .tags-container {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        /* Rest of the previous styles remain the same */
-        .add-form {
-            background-color: white;
+        .control-card {
+            background-color: var(--card-background);
             padding: 20px;
-            border-radius: 5px;
+            border-radius: var(--border-radius);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
         }
 
+        /* Form Styles */
         .form-group {
             margin-bottom: 15px;
         }
 
-        label {
+        .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
         }
 
-        select, input {
+        .form-control {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
         }
 
-        button {
-            background-color: #1a237e;
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Schedule Grid */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 100px repeat(7, 1fr);
+            gap: 12px;
+            overflow-x: auto;
+        }
+
+        .header-cell {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+        }
+
+        .time-cell {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+        }
+
+        .schedule-cell {
+            background-color: var(--card-background);
+            min-height: 120px;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+
+        .schedule-cell:hover {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Activity Styles */
+        .activity {
+            background-color: #f8fafc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .activity:hover {
+            transform: translateX(2px);
+        }
+
+        .activity.completed {
+            opacity: 0.7;
+            background-color: #f1f5f9;
+            border-left-color: #64748b;
+        }
+
+        .activity-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .activity-text {
+            margin: 5px 0;
+            word-break: break-word;
+        }
+
+        .activity.completed .activity-text {
+            text-decoration: line-through;
+            color: #64748b;
+        }
+
+        /* Tag Styles */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 16px;
+            font-size: 0.875rem;
+            color: white;
+            gap: 4px;
+        }
+
+        .tag-checkbox {
+            display: none;
+        }
+
+        .tag-label {
+            padding: 4px 12px;
+            border-radius: 16px;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .tag-label:hover {
+            opacity: 0.9;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--primary-color);
             color: white;
             padding: 10px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
         }
 
-        button:hover {
-            background-color: #3949ab;
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #64748b;
+            transition: var(--transition);
+        }
+
+        .btn-icon:hover {
+            color: var(--primary-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .schedule-grid {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .schedule-grid {
+                grid-template-columns: 80px repeat(7, minmax(120px, 1fr));
+                font-size: 0.8rem;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+        }
+
+
+        .tags-selection {
+            margin-top: 10px;
+        }
+        
+        .tag-option {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 10px;
+            margin-bottom: 5px;
+        }
+        
+        .tag-option input[type="checkbox"] {
+            margin-right: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Agenda Semanal</h1>
+        <header class="header">
+            <h1>Agenda Semanal</h1>
+        </header>
 
-        <!-- Custom Tags Section -->
-        <div class="custom-tags-section">
-            <h3>Gerenciar Tags</h3>
-            <div class="custom-tag-input">
-                <input type="text" id="newTagName" placeholder="Nome da tag">
-                <input type="color" id="newTagColor" value="#1a237e">
-                <button onclick="addCustomTag()">Adicionar Tag</button>
+        <div class="controls">
+            <div class="control-card">
+                <h3>Adicionar Atividade</h3>
+                <div class="form-group">
+                    <label>Dia da Semana:</label>
+                    <select id="daySelect" class="form-control">
+                        <option value="segunda">Segunda</option>
+                        <option value="terca">Terça</option>
+                        <option value="quarta">Quarta</option>
+                        <option value="quinta">Quinta</option>
+                        <option value="sexta">Sexta</option>
+                        <option value="sabado">Sábado</option>
+                        <option value="domingo">Domingo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Período:</label>
+                    <select id="timeSelect" class="form-control">
+                        <option value="manha">Manhã</option>
+                        <option value="tarde">Tarde</option>
+                        <option value="noite">Noite</option>
+                        <option value="madrugada">Madrugada</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Atividade:</label>
+                    <input type="text" id="activityInput" class="form-control" placeholder="Digite a atividade">
+                </div>
+                <div class="form-group">
+                    <label>Tags (máximo 2):</label>
+                    <div id="tagsContainer" class="tags-container">
+                        <!-- Tags serão inseridas aqui -->
+                    </div>
+                </div>
+
+                <button class="btn" onclick="addActivity()">
+                    <i class="fas fa-plus"></i> Adicionar
+                </button>
             </div>
-            <div id="customTagsList" class="tags-container">
-                <!-- Custom tags will be displayed here -->
-            </div>
-        </div>
-        
-        <!-- Previous form structure with modifications -->
-        <div class="add-form">
-            <div class="form-group">
-                <label>Dia da Semana:</label>
-                <select id="daySelect">
-                    <option value="segunda">Segunda</option>
-                    <option value="terca">Terça</option>
-                    <option value="quarta">Quarta</option>
-                    <option value="quinta">Quinta</option>
-                    <option value="sexta">Sexta</option>
-                    <option value="sabado">Sábado</option>
-                    <option value="domingo">Domingo</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Período:</label>
-                <select id="timeSelect">
-                    <option value="manha">Manhã</option>
-                    <option value="tarde">Tarde</option>
-                    <option value="noite">Noite</option>
-                    <option value="madrugada">Madrugada</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Atividade:</label>
-                <input type="text" id="activityInput" placeholder="Digite a atividade">
-            </div>
-            <div class="form-group">
-                <label>Tags (máximo 2):</label>
-                <div id="tagsContainer" class="tags-container">
-                    <!-- Tags will be dynamically loaded here -->
+
+            <div class="control-card">
+                <h3>Gerenciar Tags</h3>
+                <div class="form-group">
+                    <label>Nova Tag:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="newTagName" class="form-control" placeholder="Nome da tag">
+                        <input type="color" id="newTagColor" value="#2563eb" style="width: 50px;">
+                    </div>
+                </div>
+                <button class="btn" onclick="addCustomTag()">
+                    <i class="fas fa-tag"></i> Adicionar Tag
+                </button>
+                <div id="customTagsList" class="tags-container">
+                    <!-- Tags serão inseridas aqui -->
                 </div>
             </div>
-            <button onclick="addActivity()">Adicionar Atividade</button>
         </div>
 
-        <!-- Schedule grid remains the same -->
         <div class="schedule-grid">
-            <!-- Previous grid structure remains the same -->
             <div class="header-cell">Horário</div>
             <div class="header-cell">Segunda</div>
             <div class="header-cell">Terça</div>
@@ -256,13 +389,13 @@
     </div>
 
     <script>
-        // Load custom tags and activities when the page loads
+        // Carregamento inicial
         document.addEventListener('DOMContentLoaded', () => {
             loadCustomTags();
             loadActivities();
         });
 
-        // Custom tags management
+        // Gerenciamento de Tags
         function loadCustomTags() {
             const tags = getCustomTags();
             updateTagsContainer(tags);
@@ -296,101 +429,111 @@
             saveCustomTags(tags);
             loadCustomTags();
 
-            // Clear inputs
             document.getElementById('newTagName').value = '';
         }
 
         function removeCustomTag(tagName) {
-            const tags = getCustomTags().filter(tag => tag.name !== tagName);
-            saveCustomTags(tags);
-            loadCustomTags();
+            if (confirm('Deseja realmente remover esta tag?')) {
+                const tags = getCustomTags().filter(tag => tag.name !== tagName);
+                saveCustomTags(tags);
+                loadCustomTags();
+            }
         }
 
         function updateTagsContainer(tags) {
             const container = document.getElementById('tagsContainer');
-            container.innerHTML = '';
-
-            tags.forEach(tag => {
-                const tagDiv = document.createElement('div');
-                tagDiv.innerHTML = `
-                    <input type="checkbox" id="tag${tag.name}" class="tag-checkbox" value="${tag.name}">
-                    <label for="tag${tag.name}" class="tag-label" style="background-color: ${tag.color}">
-                        ${tag.name}
-                    </label>
-                `;
-                container.appendChild(tagDiv);
-            });
+            if (container) {
+                container.innerHTML = '';
+                tags.forEach(tag => {
+                    const tagElement = document.createElement('div');
+                    tagElement.className = 'tag-option';
+                    tagElement.innerHTML = `
+                        <input type="checkbox" id="tag_${tag.name}" value="${tag.name}">
+                        <label for="tag_${tag.name}" style="color: ${tag.color}">
+                            ${tag.name}
+                        </label>
+                    `;
+                    container.appendChild(tagElement);
+                });
+            }
         }
 
         function updateCustomTagsList(tags) {
             const container = document.getElementById('customTagsList');
-            container.innerHTML = '';
-
-            tags.forEach(tag => {
-                const tagSpan = document.createElement('span');
-                tagSpan.className = 'tag';
-                tagSpan.style.backgroundColor = tag.color;
-                tagSpan.innerHTML = `
+            container.innerHTML = tags.map(tag => `
+                <span class="tag" style="background-color: ${tag.color}">
                     ${tag.name}
-                    <span onclick="removeCustomTag('${tag.name}')" style="cursor: pointer; margin-left: 5px;">❌</span>
-                `;
-                container.appendChild(tagSpan);
-            });
+                    <button class="btn-icon" onclick="removeCustomTag('${tag.name}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </span>
+            `).join('');
         }
 
-        // Activity management
+        // Gerenciamento de Atividades
         function addActivity() {
             const day = document.getElementById('daySelect').value;
             const time = document.getElementById('timeSelect').value;
             const activity = document.getElementById('activityInput').value.trim();
-            const tags = getSelectedTags();
+            const selectedTags = Array.from(document.querySelectorAll('#tagsContainer input[type="checkbox"]:checked'))
+                .map(cb => cb.value);
 
             if (!activity) {
                 alert('Por favor, digite uma atividade!');
                 return;
             }
 
-            if (tags.length > 2) {
+            if (selectedTags.length > 2) {
                 alert('Selecione no máximo 2 tags!');
                 return;
             }
 
             const cellId = `${day}-${time}`;
             const activities = getActivities(cellId);
-            activities.push({ 
-                text: activity, 
-                tags: tags.map(tag => {
+            
+            const newActivity = {
+                id: Date.now(),
+                text: activity,
+                tags: selectedTags.map(tag => {
                     const customTag = getCustomTags().find(t => t.name === tag);
                     return {
                         name: tag,
-                        color: customTag ? customTag.color : '#1a237e'
+                        color: customTag ? customTag.color : '#2563eb'
                     };
                 }),
-                completed: false 
-            });
+                completed: false
+            };
+
+            activities.push(newActivity);
             saveActivities(cellId, activities);
             updateCell(cellId, activities);
 
-            // Clear form
+            // Limpar formulário
             document.getElementById('activityInput').value = '';
-            document.querySelectorAll('.tag-checkbox').forEach(cb => cb.checked = false);
+            document.querySelectorAll('#tagsContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
         }
 
-        function getSelectedTags() {
-            const checkboxes = document.querySelectorAll('.tag-checkbox:checked');
-            return Array.from(checkboxes).map(cb => cb.value);
-        }
-
-        function toggleActivity(cellId, index) {
+        function toggleActivity(cellId, activityId) {
             const activities = getActivities(cellId);
-            activities[index].completed = !activities[index].completed;
-            saveActivities(cellId, activities);
-            updateCell(cellId, activities);
+            const activity = activities.find(a => a.id === activityId);
+            if (activity) {
+                activity.completed = !activity.completed;
+                saveActivities(cellId, activities);
+                updateCell(cellId, activities);
+            }
+        }
+
+        function removeActivity(cellId, activityId) {
+            if (confirm('Deseja realmente remover esta atividade?')) {
+                const activities = getActivities(cellId);
+                const updatedActivities = activities.filter(a => a.id !== activityId);
+                saveActivities(cellId, updatedActivities);
+                updateCell(cellId, updatedActivities);
+            }
         }
 
         function getActivities(cellId) {
-            const stored = localStorage.getItem(cellId);
-            return stored ? JSON.parse(stored) : [];
+            return JSON.parse(localStorage.getItem(cellId) || '[]');
         }
 
         function saveActivities(cellId, activities) {
@@ -399,56 +542,26 @@
 
         function updateCell(cellId, activities) {
             const cell = document.getElementById(cellId);
-            cell.innerHTML = '';
-
-            activities.forEach((activity, index) => {
-                const activityDiv = document.createElement('div');
-                activityDiv.className = `activity ${activity.completed ? 'completed' : ''}`;
-                
-                // Checkbox
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.checked = activity.completed;
-                checkbox.style.marginRight = '8px';
-                checkbox.onclick = () => toggleActivity(cellId, index);
-                
-                // Remove button
-                const removeBtn = document.createElement('span');
-                removeBtn.innerHTML = '❌';
-                removeBtn.style.float = 'right';
-                removeBtn.style.cursor = 'pointer';
-                removeBtn.onclick = () => removeActivity(cellId, index);
-                
-                // Activity text
-                const activityText = document.createElement('span');
-                activityText.className = 'activity-text';
-                activityText.textContent = activity.text;
-                
-                // Tags
-                const tagsContainer = document.createElement('div');
-                activity.tags.forEach(tag => {
-                    const tagSpan = document.createElement('span');
-                    tagSpan.className = 'tag';
-                    tagSpan.style.backgroundColor = tag.color;
-                    tagSpan.textContent = tag.name;
-                    tagsContainer.appendChild(tagSpan);
-                });
-
-                activityDiv.appendChild(checkbox);
-                activityDiv.appendChild(activityText);
-                activityDiv.appendChild(removeBtn);
-                activityDiv.appendChild(document.createElement('br'));
-                activityDiv.appendChild(tagsContainer);
-                
-                cell.appendChild(activityDiv);
-            });
-        }
-
-        function removeActivity(cellId, index) {
-            const activities = getActivities(cellId);
-            activities.splice(index, 1);
-            saveActivities(cellId, activities);
-            updateCell(cellId, activities);
+            cell.innerHTML = activities.map(activity => `
+                <div class="activity ${activity.completed ? 'completed' : ''}" data-id="${activity.id}">
+                    <div class="activity-controls">
+                        <input type="checkbox" 
+                               ${activity.completed ? 'checked' : ''} 
+                               onchange="toggleActivity('${cellId}', ${activity.id})">
+                        <button class="btn-icon" onclick="removeActivity('${cellId}', ${activity.id})">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                    <div class="activity-text">${activity.text}</div>
+                    <div class="tags-container">
+                        ${activity.tags.map(tag => `
+                            <span class="tag" style="background-color: ${tag.color}">
+                                ${tag.name}
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
         }
 
         function loadActivities() {
@@ -463,6 +576,8 @@
                 });
             });
         }
+
+       
     </script>
 </body>
 </html>
